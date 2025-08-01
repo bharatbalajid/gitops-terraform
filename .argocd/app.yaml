@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-org/gitops-terraform'
+    repoURL: 'https://github.com/bharatbalajid/gitops-terraform'
     targetRevision: HEAD
     path: manifests
   destination:

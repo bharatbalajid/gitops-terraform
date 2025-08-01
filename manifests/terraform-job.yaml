@@ -7,6 +7,25 @@ spec:
   backoffLimit: 0
   template:
     spec:
+      volumes:
+        - name: tf-workspace
+          emptyDir: {}
+        - name: tf-code
+          configMap:
+            name: tf-config
+
+      initContainers:
+        - name: copy-tf-code
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - cp -r /tf-src/* /workspace/
+          volumeMounts:
+            - name: tf-code
+              mountPath: /tf-src
+            - name: tf-workspace
+              mountPath: /workspace
+
       containers:
         - name: terraform
           image: hashicorp/terraform:1.8.5
@@ -18,10 +37,18 @@ spec:
               terraform init
               terraform apply -auto-approve
           volumeMounts:
-            - name: tf-code
+            - name: tf-workspace
               mountPath: /workspace
-      volumes:
-        - name: tf-code
-          configMap:
-            name: tf-config
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: AWS_SECRET_ACCESS_KEY
+
       restartPolicy: Never
