@@ -3,5 +3,5 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "demo" {
-  bucket = "argocd-demo-bucket-123456"
+  bucket = "argocd-demo-bucket-123456-NEW"
 }
