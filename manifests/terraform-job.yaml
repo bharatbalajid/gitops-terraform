@@ -19,7 +19,7 @@ spec:
           image: busybox
           command: ["/bin/sh", "-c"]
           args:
-            - cp -r /tf-src/* /workspace/
+            - cp /tf-src/* /workspace/
           volumeMounts:
             - name: tf-code
               mountPath: /tf-src
@@ -33,6 +33,7 @@ spec:
             - /bin/sh
             - -c
             - |
+              ls /workspace
               cd /workspace
               terraform init
               terraform apply -auto-approve
