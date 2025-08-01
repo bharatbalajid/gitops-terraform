@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: terraform-apply
+  namespace: terraform
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+        - name: terraform
+          image: hashicorp/terraform:1.8.5
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cd /workspace
+              terraform init
+              terraform apply -auto-approve
+          volumeMounts:
+            - name: tf-code
+              mountPath: /workspace
+      volumes:
+        - name: tf-code
+          configMap:
+            name: tf-config
+      restartPolicy: Never
